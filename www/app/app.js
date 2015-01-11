@@ -1,5 +1,7 @@
 // Expose React on window for react-router.
-var React = window.React = require('react');
+var isBrowser = typeof window !== 'undefined';
+var _global = isBrowser ? window : global;
+var React = _global.React = require('react');
 var Router = require('react-router');
 var {Route, DefaultRoute, NotFoundRoute, RouteHandler} = Router;
 var AsyncMixin = require('mixins/async');
@@ -26,6 +28,17 @@ var routes = (
     </Route>
 );
 
-Router.run(routes, Router.HistoryLocation, function(Handler) {
-    React.render(<Handler />, document.getElementById('main'));
-});
+if (isBrowser) {
+    Router.run(routes, Router.HistoryLocation, function(Handler) {
+        React.render(<Handler />, document.getElementById('main'));
+    });
+} else {
+    module.exports = {
+        start: function(route, cb) {
+            Router.run(routes, route, function(Handler) {
+                var html = React.renderToString(<Handler />);
+                cb(html);
+            });
+        }
+    };
+}

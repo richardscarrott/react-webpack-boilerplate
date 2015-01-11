@@ -2,7 +2,7 @@ var React = require('react');
 var Router = require('react-router');
 var {RouteHandler, Link} = Router;
 
-require('./layout.css');
+// require('./layout.css');
 
 var Layout = React.createClass({
     render: function() {
