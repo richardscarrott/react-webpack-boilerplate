@@ -1,0 +1,34 @@
+{
+  "name": "react-webpack-boilerplate",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "author": "Richard Scarrott",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-util": "^3.0.1",
+    "require-dir": "^0.1.0",
+    "webpack": "^1.4.14",
+    "jsx-loader": "^0.12.2",
+    "file-loader": "^0.8.1",
+    "url-loader": "^0.5.5",
+    "style-loader": "^0.8.2",
+    "css-loader": "^0.9.0",
+    "bundle-loader": "^0.5.2",
+    "gulp-jshint": "^1.9.0",
+    "gulp-shell": "^0.2.11",
+    "del": "^1.1.0",
+    "stats-webpack-plugin": "0.0.1",
+    "jshint-stylish": "^1.0.0"
+  },
+  "dependencies": {
+    "express": "^4.10.7",
+    "handlebars": "^2.0.0",
+    "colors": "^1.0.3",
+    "consolidate": "^0.10.0"
+  }
+}
