@@ -1,5 +1,7 @@
 'use strict';
 
+// TODO: work out how we can make enhanced-require not synchronous as loading... is always
+// rendered when it hits require.ensure()...
 // TODO: Try actually building for node and run that...but not sure how that would export the html...
 // TODO: Try attaching react to the root html element so the app can then manage the title..
 // frozen head might be useful - https://www.npmjs.com/package/react-frozenhead
@@ -18,13 +20,22 @@ var myRequire = require('enhanced-require')(module, {
     resolve: webpackConfig.resolve,
     // This doesn't work - https://github.com/webpack/enhanced-require/issues/9
     // Currently using React and React Router from npm...
+    // Try this - https://github.com/lpiepiora/bower-webpack-plugin
     plugins: [
         new webpack.ResolverPlugin(
             new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
         )
     ]
 });
+
 var app = myRequire('app');
+
+// console.log('one');
+// myRequire.ensure([], function() {
+//     app = myRequire('app');
+//     console.log('two');
+// });
+// console.log('three');
 
 var server = express();
 
@@ -46,7 +57,7 @@ server.use(function(req, res) {
         chunk = assets[route],
         html;
 
-    html = app.start(res.url, function(html) {
+    html = app.start(req.url, function(html) {
         res.render('index', {
             content: html,
             js: {

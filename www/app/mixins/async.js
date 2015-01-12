@@ -2,8 +2,20 @@
 // https://github.com/rackt/react-router/blob/master/examples/partial-app-loading/app.js
 var AsyncMixin = {
 
-    componentDidMount: function() {
+    // componentDidMount isn't called when renderingToString as it's queued
+    // async however forceUpdate throws an error when run in componentWillMount
+    // 
+    // ReferenceError: document is not defined
+    // at getActiveElement (/Users/Rich/Pro... (length: 2384) /Users/Rich/Projects/react-webpack-boilerplate/node_modules/express/lib/application.js:570
+    // https://github.com/facebook/react/issues/1866
+    componentWillMount: function() {
+        debugger;
+        // this.load();
+    },
+
+    getInitialState: function() {
         this.load();
+        return {};
     },
 
     load: function() {
@@ -17,6 +29,7 @@ var AsyncMixin = {
     },
 
     render: function() {
+        debugger;
         var Component = this.constructor.loadedComponent;
         if (Component) {
             return <Component />;
