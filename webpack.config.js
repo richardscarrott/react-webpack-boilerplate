@@ -10,11 +10,11 @@ module.exports = {
         chunkFilename: '[chunkhash].[name].js'
     },
     module: {
-        noParse: /bower_components/,
         loaders: [
             { test: /\.js$/, loader: 'jsx-loader?harmony' },
             { test: /\.css$/, loader: 'style-loader!css-loader' },
-            { test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192' }
+            { test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192' },
+            { test: /react\.js$/, loader: 'expose?React' }
         ]
     },
     resolve: {

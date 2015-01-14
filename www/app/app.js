@@ -1,5 +1,4 @@
-// Expose React on window for react-router.
-var React = window.React = require('react');
+var React = require('react');
 var Router = require('react-router');
 var {Route, DefaultRoute, NotFoundRoute, RouteHandler} = Router;
 var AsyncMixin = require('mixins/async');
