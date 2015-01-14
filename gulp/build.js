@@ -5,27 +5,40 @@ var webpack = require('webpack');
 var webpackConfig = require('./../webpack.config.js')
 var del = require('del');
 
-gulp.task('clean:dist', function(cb) {
+function cleanDist(cb) {
     del('dist/**/*.*', cb);
+}
+
+function copySrc() {
+    gulp.src([
+        'src/**/*',
+        '!src/app{,/**}',
+        '!src/bower_components{,/**}'
+    ]).pipe(gulp.dest('dist'));
+}
+
+function build(name, config, cb) {
+    cleanDist();
+    webpack(config).run(function(err, stats) {
+        if (err) throw new gutil.PluginError(name, err);
+        gutil.log('[' + name + ']', stats.toString({
+            colors: true
+        }));
+        copySrc(cb);
+    });
+}
+
+function watchSrc(task) {
+    return gulp.watch(['src/**/*'], [task]);
+}
+
+gulp.task('build:dev:watch', ['build:dev'], function() {
+    return watchSrc('build:dev');
 });
 
-gulp.task('build', ['webpack'], function() {
-    return gulp.watch(['www/**/*', 'server/**/*'], ['webpack']);
-});
-
-gulp.task('webpack', ['clean:dist'], function(callback) {
+gulp.task('build:dev', function(cb) {
     var config = Object.create(webpackConfig);
     config.devtool = 'source-map';
     config.debug = true;
-
-    webpack(config).run(function(err, stats) {
-        if (err) throw new gutil.PluginError('webpack:build', err);
-        gutil.log('[webpack]', stats.toString({
-            colors: true
-        }));
-        callback();
-    });
-
-    gulp.src(['server/**/*.*'])
-        .pipe(gulp.dest('dist/server'));
+    build('webpack:dev', config, cb);
 });

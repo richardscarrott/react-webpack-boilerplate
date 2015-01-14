@@ -5,7 +5,7 @@ var path = require('path');
 var consolidate = require('consolidate');
 var handlebars = require('handlebars');
 var colors = require('colors');
-var stats = require('./stats.json');
+var stats = require('../dist/stats.json');
 
 var server = express();
 
@@ -15,7 +15,7 @@ server.set('views', path.join(__dirname, './views'));
 server.set('port', process.env.PORT || 6060);
 server.disable('x-powered-by');
 
-server.use(express.static(path.join(__dirname, '../www')));
+server.use(express.static(path.join(__dirname, '../dist')));
 
 server.use(function(req, res) {
     var assets = stats.assetsByChunkName,

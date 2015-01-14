@@ -5,7 +5,7 @@ var StatsPlugin = require('stats-webpack-plugin');
 module.exports = {
     entry: 'app.js',
     output: {
-        path: path.join(__dirname, 'dist/www'),
+        path: path.join(__dirname, 'dist'),
         filename: '[chunkhash].entry.js',
         chunkFilename: '[chunkhash].[name].js'
     },
@@ -19,16 +19,16 @@ module.exports = {
     },
     resolve: {
         root: [
-            path.join(__dirname, 'www/bower_components'),
-            path.join(__dirname, 'www/app'),
-            path.join(__dirname, 'www/assets')
+            path.join(__dirname, 'src/bower_components'),
+            path.join(__dirname, 'src/app'),
+            path.join(__dirname, 'src/assets')
         ]
     },
     plugins: [
         new webpack.ResolverPlugin(
             new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
         ),
-        new StatsPlugin(path.join(__dirname, 'dist/server', 'stats.json'), {
+        new StatsPlugin(path.join(__dirname, 'dist', 'stats.json'), {
             chunkModules: true
         })
     ]
