@@ -8,6 +8,7 @@ var gutil = require('gulp-util');
 var path = require('path');
 var webpack = require('webpack');
 var StatsPlugin = require('stats-webpack-plugin');
+var autoprefixer = require('autoprefixer-core');
 var del = require('del');
 var argv = require('yargs').argv;
 
@@ -25,11 +26,12 @@ function getDefaultConfig() {
         module: {
             loaders: [
                 { test: /\.js$/, loader: 'jsx-loader?harmony' },
-                { test: /\.css$/, loader: 'style-loader!css-loader' },
+                { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader' },
                 { test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192' },
                 { test: /react\.js$/, loader: 'expose?React' }
             ]
         },
+        postcss: [autoprefixer()],
         resolve: {
             root: [
                 path.join(__dirname, '../src/bower_components'),
@@ -96,7 +98,7 @@ gulp.task('clean-dist', function(cb) {
 gulp.task('webpack', ['clean-dist'], function(cb) {
     webpack(getConfig())
         .run(function(err) {
-            if (err) throw new gutil.PluginError('build', err);
+            if (err) throw new gutil.PluginError('webpack', err);
             cb();
         });
 });
