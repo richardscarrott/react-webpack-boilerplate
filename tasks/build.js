@@ -10,11 +10,9 @@ var webpack = require('webpack');
 var StatsPlugin = require('stats-webpack-plugin');
 var del = require('del');
 var argv = require('yargs').argv;
-var WebpackDevServer = require('webpack-dev-server');
 
 // CLI arguments
 var env = argv.env || 'dev';
-var watch = argv.watch;
 
 function getDefaultConfig() {
     return {
@@ -36,7 +34,6 @@ function getDefaultConfig() {
             root: [
                 path.join(__dirname, '../src/bower_components'),
                 path.join(__dirname, '../src/app'),
-                path.join(__dirname, '../src/env'),
                 path.join(__dirname, '../src/assets')
             ]
         },
