@@ -27,8 +27,8 @@ server.use(function(req, res) {
 
     res.render('index', {
         js: {
-            entry: entry[0],
-            chunk: chunk && chunk[0]
+            entry: Array.isArray(entry) ? entry[0] : entry,
+            chunk: Array.isArray(chunk) ? chunk[0] : chunk
         }
     });
 });

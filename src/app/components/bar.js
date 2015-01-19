@@ -5,7 +5,7 @@ var Bar = React.createClass({
     render: function() {
         return (
             <div>
-                Hello Bar.
+                Hello bar.
             </div>
         );
     }

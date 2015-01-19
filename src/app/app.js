@@ -5,6 +5,10 @@ var AsyncMixin = require('mixins/async');
 var LayoutComponent = require('components/layout');
 var four04Component = require('components/404');
 
+if (ENV.debug) {
+    alert('Hello world.');
+}
+
 // react-router makes code splitting pretty ugly...
 var preFooComponent = React.createClass({
     mixins: [AsyncMixin],
