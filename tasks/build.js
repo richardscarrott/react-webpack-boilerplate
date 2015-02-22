@@ -8,6 +8,7 @@ var gutil = require('gulp-util');
 var path = require('path');
 var webpack = require('webpack');
 var StatsPlugin = require('stats-webpack-plugin');
+var BrowserConsoleBuildErrorPlugin = require('browser-console-build-error-webpack-plugin');
 var autoprefixer = require('autoprefixer-core');
 var del = require('del');
 var argv = require('yargs').argv;
@@ -48,7 +49,8 @@ function getDefaultConfig() {
             }),
             new webpack.DefinePlugin({
                 ENV: JSON.stringify(require('../src/env/' + env))
-            })
+            }),
+            new BrowserConsoleBuildErrorPlugin()
         ]
     };
     return config;
