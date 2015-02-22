@@ -16,6 +16,8 @@ var argv = require('yargs').argv;
 // CLI arguments
 var env = argv.env || 'dev';
 
+var compiler;
+
 function getDefaultConfig() {
     return {
         entry: 'app.js',
@@ -53,8 +55,7 @@ function getDefaultConfig() {
             new BrowserConsoleBuildErrorPlugin()
         ]
     };
-    return config;
-};
+}
 
 /**
  * Returns the dev webpack config.
@@ -93,19 +94,19 @@ function getConfig() {
     }
 }
 
-gulp.task('clean-dist', function(cb) {
+gulp.task('clean', function(cb) {
     del('dist/**', cb);
 });
 
-gulp.task('webpack', ['clean-dist'], function(cb) {
-    webpack(getConfig())
-        .run(function(err) {
-            if (err) throw new gutil.PluginError('webpack', err);
-            cb();
-        });
+gulp.task('webpack', ['clean'], function(cb) {
+    compiler = webpack(getConfig());
+    compiler.run(function(err) {
+        if (err) throw new gutil.PluginError('webpack', err);
+        cb();
+    });
 });
 
-gulp.task('copy-src', ['clean-dist'], function() {
+gulp.task('copy', ['clean'], function() {
     return gulp.src([
         'src/**',
         '!src/app{,/**}',
@@ -114,8 +115,16 @@ gulp.task('copy-src', ['clean-dist'], function() {
     ]).pipe(gulp.dest('dist'));
 });
 
-gulp.task('build', ['webpack', 'copy-src']);
+gulp.task('build', ['webpack', 'copy']);
+// TODO: upgrade to gulp 4.0 and remove copy and webpack deps on clean.
+// ideally they'd be private functions...
+// gulp.task('build', gulp.series(clean, gulp.parallel(webpack, copy)));
 
-gulp.task('build-watch', ['build'], function() {
-    gulp.watch(['src/**/*'], ['build']);
+gulp.task('watch', ['build'], function() {
+    compiler.watch(200, function(err, stats) {
+        if (err) throw new gutil.PluginError('webpack', err);
+        gutil.log(stats.toString({
+            colors: true
+        }));
+    });
 });
