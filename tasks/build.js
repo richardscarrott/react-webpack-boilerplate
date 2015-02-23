@@ -1,8 +1,5 @@
 // https://github.com/webpack/webpack-with-common-libs/blob/master/gulpfile.js
 
-// TODO: Work out better way to pass in environment vars as the DefinePlugin
-// doesn't optimize well.
-
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var path = require('path');
@@ -15,9 +12,21 @@ var argv = require('yargs').argv;
 
 // CLI arguments
 var env = argv.env || 'dev';
+var release = !!argv.release;
+var watch = !!argv.watch;
 
-var compiler;
+/**
+ * Deletes the contents of the dist directory.
+ * @param {Function}
+ */
+function clean(cb) {
+    del('dist/**', cb);
+}
 
+/**
+ * Returns the default webpack config used by both dev and release builds.
+ * @return {Object} The webpack config.
+ */
 function getDefaultConfig() {
     return {
         entry: 'app.js',
@@ -69,10 +78,10 @@ function getDevConfig() {
 }
 
 /**
- * Returns the prod webpack config.
+ * Returns the release webpack config.
  * @return {Object} The webpack config.
  */
-function getProdConfig() {
+function getReleaseConfig() {
     var config = getDefaultConfig();
     config.output.filename = '[chunkhash].entry.js';
     config.output.chunkFilename = '[chunkhash].[name].js';
@@ -87,44 +96,46 @@ function getProdConfig() {
  * @return {Object} The webpack config.
  */
 function getConfig() {
-    if (env === 'prod' || env === 'uat') {
-        return getProdConfig();
+    return release ? getReleaseConfig() : getDevConfig();
+}
+
+/**
+ * Bundles the src code.
+ * @param {Function}
+ */
+function bundle(cb) {
+    var compiler = webpack(getConfig());
+    var firstRun = true;
+    function handler(err, stats) {
+        if (err) {
+            new gutil.PluginError('webpack', err);
+        }
+        gutil.log(stats.toString({
+            colors: true
+        }));
+        if (firstRun) {
+            cb();
+        }
+    }
+    if (watch) {
+        compiler.watch(200, handler);
     } else {
-        return getDevConfig();
+        compiler.run(handler);
     }
 }
 
-gulp.task('clean', function(cb) {
-    del('dist/**', cb);
-});
-
-gulp.task('webpack', ['clean'], function(cb) {
-    compiler = webpack(getConfig());
-    compiler.run(function(err) {
-        if (err) throw new gutil.PluginError('webpack', err);
-        cb();
-    });
-});
-
-gulp.task('copy', ['clean'], function() {
+/**
+ * Copies all files and directories not bundled by webpack, e.g. favicon.ico,
+ * robots.txt etc.
+ * @return {Stream}
+ */
+function copy() {
     return gulp.src([
         'src/**',
         '!src/app{,/**}',
         '!src/bower_components{,/**}',
         '!src/env{,/**}'
     ]).pipe(gulp.dest('dist'));
-});
+}
 
-gulp.task('build', ['webpack', 'copy']);
-// TODO: upgrade to gulp 4.0 and remove copy and webpack deps on clean.
-// ideally they'd be private functions...
-// gulp.task('build', gulp.series(clean, gulp.parallel(webpack, copy)));
-
-gulp.task('watch', ['build'], function() {
-    compiler.watch(200, function(err, stats) {
-        if (err) throw new gutil.PluginError('webpack', err);
-        gutil.log(stats.toString({
-            colors: true
-        }));
-    });
-});
+gulp.task('build', gulp.series(clean, gulp.parallel(bundle, copy)));
