@@ -27,13 +27,13 @@
     "yargs": "^1.3.3",
     "autoprefixer-core": "^5.0.0",
     "postcss-loader": "^0.3.0",
-    "browser-console-build-error-webpack-plugin": "0.0.1"
+    "browser-console-build-error-webpack-plugin": "0.0.1",
+    "ini": "^1.3.3"
   },
   "dependencies": {
     "express": "^4.10.7",
     "handlebars": "^2.0.0",
     "colors": "^1.0.3",
-    "consolidate": "^0.10.0",
-    "ini": "^1.3.3"
+    "consolidate": "^0.10.0"
   }
 }
