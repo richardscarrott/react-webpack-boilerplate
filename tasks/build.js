@@ -8,6 +8,7 @@ var StatsPlugin = require('stats-webpack-plugin');
 var BrowserConsoleBuildErrorPlugin = require('browser-console-build-error-webpack-plugin');
 var autoprefixer = require('autoprefixer-core');
 var del = require('del');
+var gulpModernizr = require('gulp-modernizr');
 var argv = require('yargs').argv;
 
 // CLI arguments
@@ -40,13 +41,14 @@ function getDefaultConfig() {
                 { test: /\.js$/, loader: 'jsx-loader?harmony' },
                 { test: /\.css$/, loader: 'style-loader!css-loader!postcss-loader' },
                 { test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192' },
-                { test: /react\.js$/, loader: 'expose?React' }
+                { test: /react\.js$/, loader: 'expose?React' },
+                { test: /modernizr\.js$/, loader: 'imports?this=>window!exports?Modernizr' }
             ]
         },
         postcss: [autoprefixer()],
         resolve: {
             root: [
-                path.join(__dirname, '../src/bower_components'),
+                path.join(__dirname, '../bower_components'),
                 path.join(__dirname, '../src/app'),
                 path.join(__dirname, '../src/assets')
             ]
@@ -86,7 +88,8 @@ function getReleaseConfig() {
     config.output.filename = '[chunkhash].entry.js';
     config.output.chunkFilename = '[chunkhash].[name].js';
     config.plugins = config.plugins.concat([
-        new webpack.optimize.UglifyJsPlugin()
+        // new webpack.optimize.UglifyJsPlugin(),
+        new webpack.NormalModuleReplacementPlugin(/modernizr\.js$/, path.join(__dirname, '../dist/custom-modernizr.js'))
     ]);
     return config;
 }
@@ -131,11 +134,29 @@ function bundle(cb) {
  */
 function copy() {
     return gulp.src([
-        'src/**',
+        'src/**', // can this be src/*
         '!src/app{,/**}',
-        '!src/bower_components{,/**}',
+        '!src/assets{,/**}',
         '!src/env{,/**}'
     ]).pipe(gulp.dest('dist'));
 }
 
-gulp.task('build', gulp.series(clean, gulp.parallel(bundle, copy)));
+function modernizr() {
+    return gulp.src('src/**/*{.js,.css}')
+        .pipe(gulpModernizr('custom-modernizr.js'))
+        .pipe(gulp.dest('dist/'));
+}
+
+function cleanmodernizr(cb) {
+    del('dist/custom-modernizr.js', cb);
+}
+
+// gulp.task('build', function() {
+//     if (release) {
+//         return gulp.series(clean, modernizr, gulp.parallel(bundle, copy), cleanmodernizr);
+//     } else {
+//         return gulp.series(clean, gulp.parallel(bundle, copy));
+//     }
+// });
+
+gulp.task('build', gulp.series(clean, modernizr, gulp.parallel(bundle, copy), cleanmodernizr));

@@ -16,5 +16,8 @@
   "devDependencies": {
     "react": "~0.12.2",
     "react-router": "~0.11.6"
+  },
+  "dependencies": {
+    "modernizr": "~2.8.3"
   }
 }

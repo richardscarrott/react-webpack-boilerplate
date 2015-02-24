@@ -30,7 +30,7 @@ The server command as the same signature as build but also starts up the server,
 - [x] Revision assets (webpack does this for free)
 - [ ] Test task
 - [ ] Lint task
-- [ ] Custom Modernizr
+- [ ] Custom Modernizr (started, however gulp-modernizr uses 3.0 but 3.0 isn't available in bower / npm or github. Also need to work out how to condition modernizr tasks when building release vs dev)
 - [ ] [Replace handlebars with React on the server](https://github.com/gpbl/isomorphic-react-template/blob/master/server.jsx).
 - [ ] Flux
 - [ ] Isomorphic using [enhanced-require](https://github.com/webpack/enhanced-require) (Started, see isomorphic branch) OR [check this out](https://github.com/webpack/react-webpack-server-side-example)

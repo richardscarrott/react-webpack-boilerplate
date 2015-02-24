@@ -4,9 +4,14 @@ var {Route, DefaultRoute, NotFoundRoute, RouteHandler} = Router;
 var AsyncMixin = require('mixins/async');
 var LayoutComponent = require('components/layout');
 var four04Component = require('components/404');
+var Modernizr = require('modernizr/modernizr');
 
 if (ENV.debug) {
     alert('Hello world.');
+}
+
+if (Modernizr.csstransforms3d) {
+    alert('Browser supports 3d transformations');
 }
 
 // react-router makes code splitting pretty ugly...
