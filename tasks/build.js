@@ -46,7 +46,7 @@ function getDefaultConfig() {
         postcss: [autoprefixer()],
         resolve: {
             root: [
-                path.join(__dirname, '../src/bower_components'),
+                path.join(__dirname, '../bower_components'),
                 path.join(__dirname, '../src/app'),
                 path.join(__dirname, '../src/assets')
             ]
@@ -125,17 +125,12 @@ function bundle(cb) {
 }
 
 /**
- * Copies all files and directories not bundled by webpack, e.g. favicon.ico,
- * robots.txt etc.
+ * Copies all files in root of src, e.g. favicon.ico, robots.txt etc.
  * @return {Stream}
  */
 function copy() {
-    return gulp.src([
-        'src/**',
-        '!src/app{,/**}',
-        '!src/bower_components{,/**}',
-        '!src/env{,/**}'
-    ]).pipe(gulp.dest('dist'));
+    return gulp.src('src/*.*')
+        .pipe(gulp.dest('dist'));
 }
 
 gulp.task('build', gulp.series(clean, gulp.parallel(bundle, copy)));
