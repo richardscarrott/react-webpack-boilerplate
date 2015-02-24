@@ -59,7 +59,7 @@ function getDefaultConfig() {
                 chunkModules: true
             }),
             new webpack.DefinePlugin({
-                ENV: JSON.stringify(require('../src/env/' + env))
+                ENV: require('../src/env/' + env)
             }),
             new BrowserConsoleBuildErrorPlugin()
         ]
