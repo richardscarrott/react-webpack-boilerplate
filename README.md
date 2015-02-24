@@ -34,4 +34,4 @@ The server command as the same signature as build but also starts up the server,
 - [ ] [Replace handlebars with React on the server](https://github.com/gpbl/isomorphic-react-template/blob/master/server.jsx).
 - [ ] Flux
 - [ ] Isomorphic using [enhanced-require](https://github.com/webpack/enhanced-require) (Started, see isomorphic branch) OR [check this out](https://github.com/webpack/react-webpack-server-side-example)
-- [ ] Add editor config
+- [x] Add editor config

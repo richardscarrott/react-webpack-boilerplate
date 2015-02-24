@@ -92,7 +92,7 @@ function getReleaseConfig() {
 }
 
 /**
- * Returns the webpack config based on `env`.
+ * Returns the dev or release webpack config based on option passed.
  * @return {Object} The webpack config.
  */
 function getConfig() {
