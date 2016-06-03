@@ -1,3 +1,5 @@
+## Deprecated, try https://github.com/60frames/react-boilerplate
+
 ## React Webpack Boilerplate
 
 `npm install`
